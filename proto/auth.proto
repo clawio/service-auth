@@ -1,0 +1,17 @@
+	syntax = "proto3";
+
+package auth;
+
+service Auth {
+    rpc Authenticate(AuthRequest) returns (AuthResponse) {}
+}
+
+message AuthRequest {
+    string username = 1; // Users´s useranme
+    string password = 2; // Users's password
+}
+
+message AuthResponse {
+    string token = 1; // JWT token
+}
+
