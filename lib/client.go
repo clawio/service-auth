@@ -1,5 +1,6 @@
 package lib
 
+/*
 import (
 	pb "github.com/clawio/service.auth/proto"
 	"golang.org/x/net/context"
@@ -40,3 +41,4 @@ func (c Client) Authenticate(ctx context.Context, username, password string) (st
 func (c Client) Close() error {
 	return c.conn.Close()
 }
+*/

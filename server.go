@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/clawio/service.auth/lib"
 	pb "github.com/clawio/service.auth/proto"
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/net/context"
-	"log"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"time"
 )
 
@@ -32,7 +32,7 @@ type server struct {
 
 func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthResponse, error) {
 	if r.Username != "demo" || r.Password != "demo" {
-		return nil, fmt.Errorf("entity %s not found", r.Username)
+		return nil, grpc.Errorf(codes.Unauthenticated, "entity %s not found", r.Username)
 	}
 
 	idt := &lib.Identity{}
@@ -43,6 +43,7 @@ func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthR
 
 	token, err := s.createToken(idt)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 
@@ -55,9 +56,6 @@ func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthR
 // It returns the JWT token or an error.
 func (s *server) createToken(idt *lib.Identity) (string, error) {
 
-	log.Print(s.p.signMethod)
-	log.Print(jwt.GetSigningMethod(s.p.signMethod))
-
 	token := jwt.New(jwt.GetSigningMethod(s.p.signMethod))
 	token.Claims["pid"] = idt.Pid
 	token.Claims["idp"] = idt.Idp
@@ -68,6 +66,7 @@ func (s *server) createToken(idt *lib.Identity) (string, error) {
 
 	tokenStr, err := token.SignedString([]byte(s.p.sharedSecret))
 	if err != nil {
+		log.Error(err)
 		return "", err
 	}
 

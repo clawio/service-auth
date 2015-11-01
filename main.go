@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/clawio/grpcxlog"
 	pb "github.com/clawio/service.auth/proto"
+	"github.com/rs/xlog"
 	"google.golang.org/grpc"
-	"log"
+	"google.golang.org/grpc/grpclog"
 	"net"
 	"os"
 	"strconv"
@@ -27,6 +29,8 @@ type environ struct {
 	sharedSecret string
 }
 
+var log xlog.Logger
+
 func getEnviron() (*environ, error) {
 	e := &environ{}
 	e.dsn = os.Getenv(dsnEnvar)
@@ -41,20 +45,42 @@ func getEnviron() (*environ, error) {
 }
 
 func printEnviron(e *environ) {
-	log.Printf("%s=%s", dsnEnvar, e.dsn)
-	log.Printf("%s=%s", signMethodEnvar, e.signMethod)
-	log.Printf("%s=%d", portEnvar, e.port)
-	log.Printf("%s=%s", sharedSecretEnvar, "******")
+	log.Infof("%s=%s", dsnEnvar, e.dsn)
+	log.Infof("%s=%s", signMethodEnvar, e.signMethod)
+	log.Infof("%s=%d", portEnvar, e.port)
+	log.Infof("%s=%s", sharedSecretEnvar, "******")
+}
+
+func setupLog() {
+
+	// Install the logger handler with default output on the console
+	lh := xlog.NewHandler(xlog.LevelDebug)
+
+	// Set some global env fields
+	host, _ := os.Hostname()
+	lh.SetFields(xlog.F{
+		"svc":  serviceID,
+		"host": host,
+	})
+
+	// Plug the xlog handler's input to Go's default logger
+	grpclog.SetLogger(grpcxlog.Log{lh.NewLogger()})
+
+	log = lh.NewLogger()
 }
 
 func main() {
-	log.Printf("Service %s started", serviceID)
+
+	setupLog()
+
+	log.Infof("Service %s started", serviceID)
 
 	env, err := getEnviron()
 	printEnviron(env)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		os.Exit(1)
 	}
 
 	p := &newServerParams{}
@@ -66,7 +92,8 @@ func main() {
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", env.port))
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		os.Exit(1)
 	}
 
 	grpcServer := grpc.NewServer()
