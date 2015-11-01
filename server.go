@@ -16,6 +16,7 @@ const (
 
 type newServerParams struct {
 	dsn          string
+	driver       string
 	sharedSecret string
 	signMethod   string
 }
@@ -30,7 +31,7 @@ type server struct {
 }
 
 func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthResponse, error) {
-	if r.Username == "password" && r.Password == "demo" {
+	if r.Username != "demo" || r.Password != "demo" {
 		return nil, fmt.Errorf("entity %s not found", r.Username)
 	}
 

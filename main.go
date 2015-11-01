@@ -12,7 +12,8 @@ import (
 
 const (
 	serviceID         = "CLAWIO_AUTH"
-	dsnEnvar          = serviceID + "_DSN"
+	driverEnvar       = serviceID + "_DBDRIVER"
+	dsnEnvar          = serviceID + "_DBDSN"
 	signMethodEnvar   = serviceID + "_SIGNMETHOD"
 	portEnvar         = serviceID + "_PORT"
 	sharedSecretEnvar = "CLAWIO_SHAREDSECRET"
@@ -20,6 +21,7 @@ const (
 
 type environ struct {
 	dsn          string
+	driver       string
 	port         int
 	signMethod   string
 	sharedSecret string
@@ -57,9 +59,9 @@ func main() {
 
 	p := &newServerParams{}
 	p.dsn = env.dsn
+	p.driver = env.driver
 	p.sharedSecret = env.sharedSecret
 	p.signMethod = env.signMethod
-
 	srv := newServer(p)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", env.port))
