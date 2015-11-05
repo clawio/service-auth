@@ -84,3 +84,7 @@ type Identity struct {
 	Email       string `json:"email"`
 	DisplayName string `json:"email"`
 }
+
+func (i *Identity) String() string {
+	return fmt.Sprintf("pid:%s idp:%s email:%s", i.Pid, i.Idp, i.Email)
+}
