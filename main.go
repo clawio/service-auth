@@ -53,20 +53,24 @@ func printEnviron(e *environ) {
 
 func setupLog() {
 
-	// Install the logger handler with default output on the console
-	lh := xlog.NewHandler(xlog.LevelDebug)
-
-	// Set some global env fields
 	host, _ := os.Hostname()
-	lh.SetFields(xlog.F{
-		"svc":  serviceID,
-		"host": host,
-	})
+	conf := xlog.Config{
+		// Log info level and higher
+		Level: xlog.LevelDebug,
+		// Set some global env fields
+		Fields: xlog.F{
+			"svc":  serviceID,
+			"host": host,
+		},
+		// Output everything on console
+		Output: xlog.NewOutputChannel(xlog.NewConsoleOutput()),
+	}
+
+	log = xlog.New(conf)
 
 	// Plug the xlog handler's input to Go's default logger
-	grpclog.SetLogger(grpcxlog.Log{lh.NewLogger()})
+	grpclog.SetLogger(grpcxlog.Log{log})
 
-	log = lh.NewLogger()
 }
 
 func main() {
