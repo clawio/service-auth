@@ -86,5 +86,5 @@ type Identity struct {
 }
 
 func (i *Identity) String() string {
-	return fmt.Sprintf("pid:%s idp:%s email:%s", i.Pid, i.Idp, i.Email)
+	return fmt.Sprintf("identity(pid:%s idp:%s email:%s)", i.Pid, i.Idp, i.Email)
 }
