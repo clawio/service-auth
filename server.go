@@ -49,7 +49,6 @@ func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthR
 
 	res := &pb.AuthResponse{}
 	res.Token = token
-
 	return res, nil
 }
 
