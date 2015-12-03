@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/grpclog"
 	"net"
 	"os"
+	"runtime"
 	"strconv"
 )
 
@@ -74,6 +75,7 @@ func setupLog() {
 }
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	setupLog()
 
