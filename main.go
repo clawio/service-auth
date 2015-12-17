@@ -2,11 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/clawio/grpcxlog"
 	pb "github.com/clawio/service.auth/proto"
-	"github.com/rs/xlog"
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/grpclog"
 	"net"
 	"os"
 	"runtime"
@@ -30,8 +28,6 @@ type environ struct {
 	sharedSecret string
 }
 
-var log xlog.Logger
-
 func getEnviron() (*environ, error) {
 	e := &environ{}
 	e.dsn = os.Getenv(dsnEnvar)
@@ -52,32 +48,8 @@ func printEnviron(e *environ) {
 	log.Infof("%s=%s", sharedSecretEnvar, "******")
 }
 
-func setupLog() {
-
-	host, _ := os.Hostname()
-	conf := xlog.Config{
-		// Log info level and higher
-		Level: xlog.LevelDebug,
-		// Set some global env fields
-		Fields: xlog.F{
-			"svc":  serviceID,
-			"host": host,
-		},
-		// Output everything on console
-		Output: xlog.NewOutputChannel(xlog.NewConsoleOutput()),
-	}
-
-	log = xlog.New(conf)
-
-	// Plug the xlog handler's input to Go's default logger
-	grpclog.SetLogger(grpcxlog.Log{log})
-
-}
-
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-
-	setupLog()
 
 	log.Infof("Service %s started", serviceID)
 

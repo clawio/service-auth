@@ -4,6 +4,7 @@ import (
 	"github.com/clawio/service.auth/lib"
 	pb "github.com/clawio/service.auth/proto"
 	"github.com/dgrijalva/jwt-go"
+	rus "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -31,8 +32,30 @@ type server struct {
 }
 
 func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthResponse, error) {
+	traceID := getGRPCTraceID(ctx)
+	log := rus.WithField("trace", traceID).WithField("svc", serviceID)
+	ctx = newGRPCTraceContext(ctx, traceID)
+
+	log.Info("request started")
+
+	// Time request
+	reqStart := time.Now()
+
+	defer func() {
+		// Compute request duration
+		reqDur := time.Since(reqStart)
+
+		// Log access info
+		log.WithFields(rus.Fields{
+			"method":   "authenticate",
+			"type":     "grpcaccess",
+			"duration": reqDur.Seconds(),
+		}).Info("request finished")
+
+	}()
+
 	if r.Username != "demo" || r.Password != "demo" {
-		return nil, grpc.Errorf(codes.Unauthenticated, "entity %s not found", r.Username)
+		return nil, grpc.Errorf(codes.Unauthenticated, "%s not found", r.Username)
 	}
 
 	idt := &lib.Identity{}
@@ -49,6 +72,7 @@ func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthR
 
 	res := &pb.AuthResponse{}
 	res.Token = token
+	log.Infof("authentication successful for %s", idt)
 	return res, nil
 }
 
@@ -65,7 +89,6 @@ func (s *server) createToken(idt *lib.Identity) (string, error) {
 
 	tokenStr, err := token.SignedString([]byte(s.p.sharedSecret))
 	if err != nil {
-		log.Error(err)
 		return "", err
 	}
 
