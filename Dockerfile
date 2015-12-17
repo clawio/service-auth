@@ -13,7 +13,6 @@ WORKDIR /go/src/github.com/clawio/service-auth
 RUN go get -u github.com/tools/godep
 RUN godep restore
 RUN go install
-RUN go get -u github.com/clawio/service-auth
 
 ENTRYPOINT /go/bin/service-auth
 
