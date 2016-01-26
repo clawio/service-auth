@@ -4,6 +4,10 @@ import (
 	"github.com/clawio/service.auth/lib"
 	pb "github.com/clawio/service.auth/proto"
 	"github.com/dgrijalva/jwt-go"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 	rus "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -15,20 +19,51 @@ const (
 	dirPerm = 0755
 )
 
-type newServerParams struct {
-	dsn          string
-	driver       string
-	sharedSecret string
-	signMethod   string
+// debugLogger satisfies Gorm's logger interface
+// so that we can log SQL queries at Logrus' debug level
+type debugLogger struct{}
+
+func (*debugLogger) Print(msg ...interface{}) {
+	rus.Debug(msg)
 }
 
-func newServer(p *newServerParams) *server {
-	// TODO: connect to some backend with GORM
-	return &server{p}
+type newServerParams struct {
+	dsn               string
+	driver            string
+	sharedSecret      string
+	signMethod        string
+	maxSqlIdle        int
+	maxSqlConcurrency int
+}
+
+func newServer(p *newServerParams) (*server, error) {
+	db, err := newDB(p.driver, p.dsn)
+	if err != nil {
+		rus.Error(err)
+		return nil, err
+	}
+
+	db.LogMode(true)
+	db.SetLogger(&debugLogger{})
+	db.DB().SetMaxIdleConns(p.maxSqlIdle)
+	db.DB().SetMaxOpenConns(p.maxSqlConcurrency)
+
+	err = db.AutoMigrate(&identityRecord{}).Error
+	if err != nil {
+		rus.Error(err)
+		return nil, err
+	}
+
+	rus.Infof("automigration applied")
+	s := &server{}
+	s.p = p
+	s.db = db
+	return s, nil
 }
 
 type server struct {
-	p *newServerParams
+	p  *newServerParams
+	db *gorm.DB
 }
 
 func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthResponse, error) {
@@ -54,15 +89,18 @@ func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthR
 
 	}()
 
-	if r.Username != "demo" || r.Password != "demo" {
+	rec := &identityRecord{}
+	err := s.db.Where("pid=? AND password=?", r.Username, r.Password).First(rec).Error
+	if err != nil {
+		log.Error(err)
 		return nil, grpc.Errorf(codes.Unauthenticated, "%s not found", r.Username)
 	}
 
 	idt := &lib.Identity{}
-	idt.Pid = r.Username
-	idt.Idp = "localhost"
-	idt.Email = "me@me.com"
-	idt.DisplayName = "Demo User"
+	idt.Pid = rec.Pid
+	idt.Idp = rec.Idp
+	idt.Email = rec.Email
+	idt.DisplayName = rec.DisplayName
 
 	token, err := s.createToken(idt)
 	if err != nil {
