@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/clawio/service.auth/lib"
-	pb "github.com/clawio/service.auth/proto"
+	"github.com/clawio/service-auth/lib"
+	pb "github.com/clawio/service-auth/proto"
 	"github.com/dgrijalva/jwt-go"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -67,7 +67,12 @@ type server struct {
 }
 
 func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthResponse, error) {
-	traceID := getGRPCTraceID(ctx)
+	traceID, err := getGRPCTraceID(ctx)
+	if err != nil {
+		rus.Error("cannot get trace ID")
+		return &pb.AuthResponse{}, err
+	}
+
 	log := rus.WithField("trace", traceID).WithField("svc", serviceID)
 	ctx = newGRPCTraceContext(ctx, traceID)
 
@@ -90,10 +95,10 @@ func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthR
 	}()
 
 	rec := &identityRecord{}
-	err := s.db.Where("pid=? AND password=?", r.Username, r.Password).First(rec).Error
+	err = s.db.Where("pid=? AND password=?", r.Username, r.Password).First(rec).Error
 	if err != nil {
 		log.Error(err)
-		return nil, grpc.Errorf(codes.Unauthenticated, "%s not found", r.Username)
+		return &pb.AuthResponse{}, grpc.Errorf(codes.Unauthenticated, "%s not found", r.Username)
 	}
 
 	idt := &lib.Identity{}
@@ -105,7 +110,7 @@ func (s *server) Authenticate(ctx context.Context, r *pb.AuthRequest) (*pb.AuthR
 	token, err := s.createToken(idt)
 	if err != nil {
 		log.Error(err)
-		return nil, err
+		return &pb.AuthResponse{}, err
 	}
 
 	res := &pb.AuthResponse{}

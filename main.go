@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	pb "github.com/clawio/service.auth/proto"
+	pb "github.com/clawio/service-auth/proto"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"net"
@@ -19,6 +19,7 @@ const (
 	portEnvar              = serviceID + "_PORT"
 	maxSqlIdleEnvar        = serviceID + "_MAXSQLIDLE"
 	maxSqlConcurrencyEnvar = serviceID + "_MAXSQLCONCURRENCY"
+	logLevelEnvar          = serviceID + "_LOGLELVEL"
 	sharedSecretEnvar      = "CLAWIO_SHAREDSECRET"
 )
 
@@ -29,6 +30,7 @@ type environ struct {
 	signMethod        string
 	maxSqlIdle        int
 	maxSqlConcurrency int
+	logLevel          string
 	sharedSecret      string
 }
 
@@ -37,6 +39,7 @@ func getEnviron() (*environ, error) {
 	e.driver = os.Getenv(driverEnvar)
 	e.dsn = os.Getenv(dsnEnvar)
 	e.signMethod = os.Getenv(signMethodEnvar)
+	e.logLevel = os.Getenv(logLevelEnvar)
 	port, err := strconv.Atoi(os.Getenv(portEnvar))
 	if err != nil {
 		return nil, err
@@ -70,13 +73,19 @@ func printEnviron(e *environ) {
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	log.Infof("Service %s started", serviceID)
-
 	env, err := getEnviron()
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
+
+	l, err := log.ParseLevel(env.logLevel)
+	if err != nil {
+		l = log.ErrorLevel
+	}
+	log.SetLevel(l)
+
+	log.Infof("Service %s started", serviceID)
 
 	printEnviron(env)
 
