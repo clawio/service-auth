@@ -19,7 +19,7 @@ const (
 	portEnvar              = serviceID + "_PORT"
 	maxSqlIdleEnvar        = serviceID + "_MAXSQLIDLE"
 	maxSqlConcurrencyEnvar = serviceID + "_MAXSQLCONCURRENCY"
-	logLevelEnvar          = serviceID + "_LOGLELVEL"
+	logLevelEnvar          = serviceID + "_LOGLEVEL"
 	sharedSecretEnvar      = "CLAWIO_SHAREDSECRET"
 )
 
