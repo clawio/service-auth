@@ -1,0 +1,73 @@
+{"level":"info","msg":"Starting new service-auth--9cbf9056-2e5a-4d0f-79c1-33723386385e server","time":"2016-03-19T20:35:13+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T20:35:13+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T20:35:13+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T20:35:57+01:00"}
+{"level":"info","msg":"Stopping service-auth--9cbf9056-2e5a-4d0f-79c1-33723386385e server","time":"2016-03-19T20:35:57+01:00"}
+{"level":"info","msg":"Starting new service-auth--ab35e528-d697-41f7-44eb-19a3caa6c778 server","time":"2016-03-19T21:10:40+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T21:10:40+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T21:10:40+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T21:10:52+01:00"}
+{"level":"info","msg":"Stopping service-auth--ab35e528-d697-41f7-44eb-19a3caa6c778 server","time":"2016-03-19T21:10:52+01:00"}
+{"level":"info","msg":"Starting new service-auth--ead6606b-ecb6-4730-6d22-2eccee09aa2e server","time":"2016-03-19T21:10:52+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T21:10:52+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T21:10:52+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T21:10:55+01:00"}
+{"level":"info","msg":"Stopping service-auth--ead6606b-ecb6-4730-6d22-2eccee09aa2e server","time":"2016-03-19T21:10:55+01:00"}
+{"level":"info","msg":"Starting new service-auth--4cbca234-253f-4087-5dfd-900e5e2a2e64 server","time":"2016-03-19T21:11:40+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T21:11:40+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T21:11:40+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T21:11:42+01:00"}
+{"level":"info","msg":"Stopping service-auth--4cbca234-253f-4087-5dfd-900e5e2a2e64 server","time":"2016-03-19T21:11:42+01:00"}
+{"level":"info","msg":"Starting new service-auth--eb63f61e-0b01-42ea-70b5-63cfe697509c server","time":"2016-03-19T21:11:45+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T21:11:45+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T21:11:45+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T21:12:33+01:00"}
+{"level":"info","msg":"Stopping service-auth--eb63f61e-0b01-42ea-70b5-63cfe697509c server","time":"2016-03-19T21:12:33+01:00"}
+{"level":"info","msg":"Starting new service-auth--db87d435-5e1e-467b-5555-78891260af0c server","time":"2016-03-19T21:12:44+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T21:12:44+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T21:12:44+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T21:13:01+01:00"}
+{"level":"info","msg":"Stopping service-auth--db87d435-5e1e-467b-5555-78891260af0c server","time":"2016-03-19T21:13:01+01:00"}
+{"level":"info","msg":"Starting new service-auth--f67e6ef9-3f00-4c62-5904-db3835b83c33 server","time":"2016-03-19T21:13:46+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T21:13:46+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T21:13:46+01:00"}
+{"error":"unexpected end of JSON input","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:21+01:00"}
+{"error":"unexpected end of JSON input","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:24+01:00"}
+{"error":"unexpected end of JSON input","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:26+01:00"}
+{"error":"username/password does not match","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:33+01:00"}
+{"error":"username/password does not match","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:40+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:48+01:00"}
+{"error":"username/password does not match","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:51+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:53+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:54+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:54+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:55+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:56+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:57+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:57+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:58+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:59+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:14:59+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:15:00+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:15:01+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T21:17:26+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/verify","rawquery":"","time":"2016-03-19T21:17:36+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/verify","rawquery":"","time":"2016-03-19T21:20:30+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T21:20:37+01:00"}
+{"level":"info","msg":"Stopping service-auth--f67e6ef9-3f00-4c62-5904-db3835b83c33 server","time":"2016-03-19T21:20:37+01:00"}
+{"level":"info","msg":"Starting new service-auth--a928ee9f-6f7e-4ace-688e-d1e1afc281fb server","time":"2016-03-19T21:55:42+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T21:55:42+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T21:55:42+01:00"}
+{"error":"unexpected end of JSON input","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T22:03:10+01:00"}
+{"error":"username/password does not match","ip":"\"::1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T22:03:22+01:00"}
+{"ip":"\"::1\"","level":"info","msg":"success!","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T22:03:33+01:00"}
+{"level":"info","msg":"Received signal interrupt","time":"2016-03-19T23:46:31+01:00"}
+{"level":"info","msg":"Stopping service-auth--a928ee9f-6f7e-4ace-688e-d1e1afc281fb server","time":"2016-03-19T23:46:31+01:00"}
+{"level":"info","msg":"Starting new service-auth--b849bfed-97b7-4a4d-5629-ccd721986217 server","time":"2016-03-19T23:46:32+01:00"}
+{"level":"info","msg":"RPC listening on [::]:57001","time":"2016-03-19T23:46:32+01:00"}
+{"level":"info","msg":"HTTP listening on [::]:58001","time":"2016-03-19T23:46:32+01:00"}
+{"error":"username/password does not match","ip":"\"127.0.0.1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T23:47:52+01:00"}
+{"error":"username/password does not match","ip":"\"127.0.0.1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T23:47:54+01:00"}
+{"error":"username/password does not match","ip":"\"127.0.0.1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T23:47:55+01:00"}
+{"error":"username/password does not match","ip":"\"127.0.0.1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T23:47:56+01:00"}
+{"error":"username/password does not match","ip":"\"127.0.0.1\"","level":"error","msg":"problems serving request","muxvars":"map[string]string{}","path":"/clawio/auth/v1/authenticate","rawquery":"","time":"2016-03-19T23:47:57+01:00"}
