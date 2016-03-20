@@ -1,11 +1,14 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/clawio/service-auth/client/commands"
 	"github.com/codegangsta/cli"
-	"os"
 )
 
+// VERSION is the version of the client. It is inserted when compiling.
 var VERSION string
 
 //TODO(labkode) Add flag to produce json output
@@ -53,5 +56,8 @@ func main() {
 		commands.VerifyCommand,
 	}
 
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
