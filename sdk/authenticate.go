@@ -10,6 +10,7 @@ import (
 	"github.com/clawio/service-auth/server/spec"
 )
 
+// Authenticate authenticates a user using a username and a password.
 func (s *SDK) Authenticate(username, password string) (string, error) {
 	authNRequest := &spec.AuthNRequest{username, password}
 	jsonBody, err := json.Marshal(authNRequest)
@@ -36,9 +37,9 @@ func (s *SDK) Authenticate(username, password string) (string, error) {
 	if resp.StatusCode != http.StatusOK {
 		// Convert error to ApiErr
 		apiErr := &codes.APIErr{}
-		err := json.Unmarshal(resBody, apiErr)
+		_err := json.Unmarshal(resBody, apiErr)
 		if err != nil {
-			return "", err
+			return "", _err
 		}
 		return "", apiErr
 	}

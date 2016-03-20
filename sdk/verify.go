@@ -10,6 +10,8 @@ import (
 	"github.com/clawio/service-auth/server/spec"
 )
 
+// Verify verifies if an issued authn token is valid. If it is valid returns
+// the identity obtained from it.
 func (s *SDK) Verify(token string) (*spec.Identity, error) {
 	u := s.authServerURL
 	u.Path = fmt.Sprintf("%s/verify/%s", u.Path, token)
@@ -31,9 +33,9 @@ func (s *SDK) Verify(token string) (*spec.Identity, error) {
 	if resp.StatusCode != http.StatusOK {
 		// Convert error to ApiErr
 		apiErr := &codes.APIErr{}
-		err := json.Unmarshal(resBody, apiErr)
+		_err := json.Unmarshal(resBody, apiErr)
 		if err != nil {
-			return nil, err
+			return nil, _err
 		}
 		return nil, apiErr
 	}
