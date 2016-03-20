@@ -23,7 +23,7 @@ _testmain.go
 *.test
 *.prof
 
-server
-client
+server/server
+server/client
 
 *.log
