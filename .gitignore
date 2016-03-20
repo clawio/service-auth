@@ -23,4 +23,7 @@ _testmain.go
 *.test
 *.prof
 
-service-auth
+server
+client
+
+*.log
