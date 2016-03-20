@@ -11,6 +11,8 @@ import (
 	"golang.org/x/net/context"
 )
 
+// Verify verifies that an issued authn token is valid. If it is valid an identity is obtained from
+// it and returned.
 func (s *Service) Verify(ctx context.Context, r *spec.VerifyRequest) (*spec.VerifyResponse, error) {
 	res := &spec.VerifyResponse{}
 	identity, err := s.TokenStore.Verify(r.Token)
@@ -24,6 +26,7 @@ func (s *Service) Verify(ctx context.Context, r *spec.VerifyRequest) (*spec.Veri
 	return res, nil
 }
 
+// VerifyJSON handles the JSON call and forwards the request to Authenticate.
 func (s *Service) VerifyJSON(r *http.Request) (int, interface{}, error) {
 	res, err := s.Verify(
 		context.Background(),

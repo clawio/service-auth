@@ -12,7 +12,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-// Authenticate authenticates the user using a username and password.
+// Authenticate authenticates a user using a username and password.
 func (s *Service) Authenticate(ctx context.Context, r *spec.AuthNRequest) (*spec.AuthNResponse, error) {
 	res := &spec.AuthNResponse{}
 	identity, err := s.UserStore.FindByCredentials(r.Username, r.Password)
@@ -33,7 +33,7 @@ func (s *Service) Authenticate(ctx context.Context, r *spec.AuthNRequest) (*spec
 	return res, err
 }
 
-// AuthenticateJSON authenticates a user with username and password.
+// AuthenticateJSON handles the JSON call and forwards the request to Authenticate.
 // It delegates the logic to Authenticate.
 func (s *Service) AuthenticateJSON(r *http.Request) (int, interface{}, error) {
 	authNRequest := &spec.AuthNRequest{}
