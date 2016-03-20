@@ -2,17 +2,19 @@ package userstore
 
 import (
 	"github.com/clawio/service-auth/server/spec"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // enable mysql driver
 	"github.com/jinzhu/gorm"
-	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"           // enable postgresql driver
+	_ "github.com/mattn/go-sqlite3" // enable sqlite3 driver
 )
 
+// SQLUserStore implements UserStore using a SQL database.
 type SQLUserStore struct {
 	driver, dsn string
 	db          *gorm.DB
 }
 
+// NewSQLUserStore returns a new SQLUserStore.
 func NewSQLUserStore(driver, dsn string) (UserStore, error) {
 	db, err := gorm.Open(driver, dsn)
 	if err != nil {
@@ -29,6 +31,7 @@ func NewSQLUserStore(driver, dsn string) (UserStore, error) {
 	}, nil
 }
 
+// FindByCredentials finds a user given a username and a password.
 func (s *SQLUserStore) FindByCredentials(username, password string) (*spec.Identity, error) {
 	rec := &userEntity{}
 	err := s.db.Where("username=? AND password=?", username, password).First(rec).Error
