@@ -1,11 +1,13 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/NYTimes/gizmo/config"
 	"github.com/NYTimes/gizmo/server"
 	"github.com/Sirupsen/logrus"
+	"github.com/clawio/service-auth/codes"
 	"google.golang.org/grpc"
-	"net/http"
 )
 
 type (
@@ -55,17 +57,21 @@ func (s *RPCService) JSONMiddleware(j server.JSONEndpoint) server.JSONEndpoint {
 	return func(r *http.Request) (int, interface{}, error) {
 
 		status, res, err := j(r)
+		// Convert non apiErr to apiErr with code 500 and message "unexpected error"
 		if err != nil {
-			server.LogWithFields(r).WithFields(logrus.Fields{
-				"error": err,
-			}).Error("problems serving request")
-			return http.StatusServiceUnavailable, nil, &jsonErr{"sorry, this service is unavailable"}
-
+			switch err.(type) {
+			case *codes.APIErr:
+				// we do nothing
+			default:
+				server.LogWithFields(r).WithFields(logrus.Fields{
+					"error": err,
+				}).Error("unexpected error serving request")
+				err = codes.NewAPIErr(codes.Internal)
+			}
 		}
 
-		server.LogWithFields(r).Info("success!")
-		return status, res, nil
-
+		server.LogWithFields(r).Info("request served")
+		return status, res, err
 	}
 
 }
@@ -80,14 +86,5 @@ func (s *RPCService) JSONEndpoints() map[string]map[string]server.JSONEndpoint {
 			"POST": s.VerifyJSON,
 		},
 	}
-
-}
-
-type jsonErr struct {
-	Err string `json:"error"`
-}
-
-func (e *jsonErr) Error() string {
-	return e.Err
 
 }
