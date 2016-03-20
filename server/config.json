@@ -1,0 +1,17 @@
+{
+	"Server": {
+		"ServerType": "json",
+		"HTTPPort": 58001,
+		"HTTPAccessLog": "./http-access.log",
+		"Log": "./app.log",
+		"EnablePProf": true,
+		"HealthCheckType": "simple",
+		"HealthCheckPath": "/health.txt"
+	},
+	"Auth": {
+		"JWTKey": "jwtsigningkey",
+
+		"SQLUserStoreDriver": "sqlite3",
+		"SQLUserStoreDSN": "/tmp/userstore.db"
+	}
+}

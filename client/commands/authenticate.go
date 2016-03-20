@@ -35,5 +35,5 @@ func authenticate(c *cli.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Token: ", token)
+	fmt.Println("API Token: ", token)
 }

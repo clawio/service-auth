@@ -8,6 +8,7 @@ import (
 
 var VERSION string
 
+//TODO(labkode) Add flag to produce json output
 func main() {
 
 	app := cli.NewApp()
