@@ -44,10 +44,3 @@ func (s *Service) VerifyJSON(r *http.Request) (int, interface{}, error) {
 	}
 	return http.StatusOK, res, nil
 }
-
-func isValidToken(ctx context.Context, token string) bool {
-	if token == "mytoken" {
-		return true
-	}
-	return false
-}
