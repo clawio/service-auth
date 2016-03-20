@@ -1,2 +1,8 @@
-# service.eos.data
-Microservice responsible for local storage data handling
+# service.auth
+Microservice responsible for authentication.
+
+This repo contains:
+
+- client
+- server
+- sdk
