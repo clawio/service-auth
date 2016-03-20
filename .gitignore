@@ -24,6 +24,6 @@ _testmain.go
 *.prof
 
 server/server
-server/client
+client/client
 
 *.log
