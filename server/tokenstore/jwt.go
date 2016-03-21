@@ -1,7 +1,7 @@
 package tokenstore
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"time"
 
@@ -12,17 +12,21 @@ import (
 // JWTTokenStore implements the TokenStore using JWT Tokens.
 // See http://jwt.io/
 type JWTTokenStore struct {
-	JWTKey string // the key for signing the token
+	JWTKey        string // the key for signing the token
+	SigningMethod string // the algo to sign the token
 }
 
 // NewJWTTokenStore returns a TokenStore.
 func NewJWTTokenStore(key string) TokenStore {
-	return &JWTTokenStore{key}
+	return &JWTTokenStore{key, "HS256"}
 }
 
 // Create creates a JWT Token from an user Identity.
 func (j *JWTTokenStore) Create(identity *spec.Identity) (string, error) {
-	token := jwt.New(jwt.GetSigningMethod("HS256"))
+	if identity == nil {
+		return "", errors.New("identity cannot be nil")
+	}
+	token := jwt.New(jwt.GetSigningMethod(j.SigningMethod))
 	host, _ := os.Hostname()
 	token.Claims["username"] = identity.Username
 	token.Claims["email"] = identity.Email
@@ -58,17 +62,17 @@ func (j *JWTTokenStore) parseToken(token string) (*jwt.Token, error) {
 func (j *JWTTokenStore) createIdentityFromToken(token *jwt.Token) (*spec.Identity, error) {
 	username, ok := token.Claims["username"].(string)
 	if !ok {
-		return nil, fmt.Errorf("token username claim failed cast to string")
+		return nil, errors.New("token username claim failed cast to string")
 	}
 
 	email, ok := token.Claims["email"].(string)
 	if !ok {
-		return nil, fmt.Errorf("token email claim failed cast to string")
+		return nil, errors.New("token email claim failed cast to string")
 	}
 
 	displayName, ok := token.Claims["display_name"].(string)
 	if !ok {
-		return nil, fmt.Errorf("token display_name claim failed cast to string")
+		return nil, errors.New("token display_name claim failed cast to string")
 	}
 
 	return &spec.Identity{
