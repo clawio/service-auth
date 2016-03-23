@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/NYTimes/gizmo/config"
@@ -40,6 +41,9 @@ type (
 // a new Service that implements server.Service.
 func New(cfg *Config) (*Service, error) {
 	//TODO(labkode) Add flexibility based on config to choose both user and token store.
+	if cfg == nil {
+		return nil, errors.New("config cannot be nil")
+	}
 	tokenStore := tokenstore.NewJWTTokenStore(cfg.Auth.JWTKey)
 	userStore, err := userstore.NewSQLUserStore(cfg.Auth.SQLUserStoreDriver, cfg.Auth.SQLUserStoreDSN)
 	if err != nil {

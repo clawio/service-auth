@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 
@@ -37,6 +38,9 @@ func (s *Service) Authenticate(ctx context.Context, r *spec.AuthNRequest) (*spec
 // It delegates the logic to Authenticate.
 func (s *Service) AuthenticateJSON(r *http.Request) (int, interface{}, error) {
 	authNRequest := &spec.AuthNRequest{}
+	if r.Body == nil {
+		return http.StatusInternalServerError, nil, errors.New("body cannot be nil")
+	}
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError, nil, err
