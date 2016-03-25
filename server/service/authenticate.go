@@ -55,15 +55,7 @@ func (s *Service) AuthenticateJSON(r *http.Request) (int, interface{}, error) {
 		authNRequest,
 	)
 	if err != nil {
-		switch err := err.(type) {
-		case *codes.APIErr:
-			if err.Code == codes.BadAuthenticationData {
-				return http.StatusBadRequest, nil, err
-			}
-			return http.StatusInternalServerError, nil, err
-		default:
-			return http.StatusInternalServerError, nil, err
-		}
+		return http.StatusBadRequest, nil, err
 	}
 	return http.StatusOK, res, nil
 }
