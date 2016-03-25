@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/NYTimes/gizmo/server"
@@ -37,17 +36,11 @@ func (s *Service) Authenticate(ctx context.Context, r *spec.AuthNRequest) (*spec
 // AuthenticateJSON handles the JSON call and forwards the request to Authenticate.
 // It delegates the logic to Authenticate.
 func (s *Service) AuthenticateJSON(r *http.Request) (int, interface{}, error) {
-	authNRequest := &spec.AuthNRequest{}
 	if r.Body == nil {
 		return http.StatusInternalServerError, nil, errors.New("body cannot be nil")
 	}
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		return http.StatusInternalServerError, nil, err
-	}
-
-	err = json.Unmarshal(body, authNRequest)
-	if err != nil {
+	authNRequest := &spec.AuthNRequest{}
+	if err := json.NewDecoder(r.Body).Decode(authNRequest); err != nil {
 		return http.StatusBadRequest, nil, codes.NewAPIErr(codes.BadInputData)
 	}
 	res, err := s.Authenticate(
