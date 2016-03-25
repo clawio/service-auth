@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -10,6 +11,8 @@ import (
 
 // VERSION is the version of the client. It is inserted when compiling.
 var VERSION string
+
+var authAddr = os.Getenv("CLAWIO_AUTH_ADDR")
 
 //TODO(labkode) Add flag to produce json output
 func main() {
@@ -54,6 +57,13 @@ func main() {
 	app.Commands = []cli.Command{
 		commands.AuthenticateCommand,
 		commands.VerifyCommand,
+	}
+
+	// check tha we have global env set before run the app
+	if authAddr == "" {
+		fmt.Println("CLAWIO_AUTH_ADDR envar is not net")
+		fmt.Println("Example: export CLAWIO_AUTH_ADDR=\"http://localhost:58001/clawio/auth/v1\"")
+		os.Exit(1)
 	}
 
 	err := app.Run(os.Args)
