@@ -35,15 +35,7 @@ func (s *Service) VerifyJSON(r *http.Request) (int, interface{}, error) {
 		},
 	)
 	if err != nil {
-		switch err := err.(type) {
-		case *codes.APIErr:
-			if err.Code == codes.InvalidToken {
-				return http.StatusBadRequest, nil, err
-			}
-			return http.StatusInternalServerError, nil, err
-		default:
-			return http.StatusInternalServerError, nil, err
-		}
+		return http.StatusBadRequest, nil, err
 	}
 	return http.StatusOK, res, nil
 }
