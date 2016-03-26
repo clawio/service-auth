@@ -3,7 +3,6 @@ package sdk
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/clawio/codes"
@@ -13,40 +12,21 @@ import (
 // Authenticate authenticates a user using a username and a password.
 func (s *SDK) Authenticate(username, password string) (string, error) {
 	authNRequest := &spec.AuthNRequest{username, password}
-	jsonBody, err := json.Marshal(authNRequest)
-	if err != nil {
-		return "", err
-	}
-
-	req, err := http.NewRequest("POST", s.authServerURL.String()+"/authenticate", bytes.NewBuffer(jsonBody))
-	if err != nil {
-		return "", err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	jsonBody, _ := json.Marshal(authNRequest)
+	resp, err := http.Post(s.BaseURL+"/authenticate", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
-
-	resBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
 	if resp.StatusCode != http.StatusOK {
-		// Convert error to ApiErr
 		apiErr := &codes.APIErr{}
-		_err := json.Unmarshal(resBody, apiErr)
-		if err != nil {
-			return "", _err
+		if err := json.NewDecoder(resp.Body).Decode(apiErr); err != nil {
+			return "", err
 		}
 		return "", apiErr
 	}
-
 	authNResponse := &spec.AuthNResponse{}
-	err = json.Unmarshal(resBody, authNResponse)
-	if err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(authNResponse); err != nil {
 		return "", err
 	}
 	return authNResponse.Token, nil
