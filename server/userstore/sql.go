@@ -27,7 +27,7 @@ func NewSQLUserStore(driver, dsn string) (UserStore, error) {
 	return &SQLUserStore{
 		driver: driver,
 		dsn:    dsn,
-		db:     &db,
+		db:     db,
 	}, nil
 }
 
