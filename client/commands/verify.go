@@ -28,10 +28,7 @@ func verify(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	authSDK, err := sdk.NewSDK(os.Getenv("CLAWIO_AUTH_ADDR"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	authSDK := sdk.New(os.Getenv("CLAWIO_AUTH_ADDR"), nil)
 	identity, err := authSDK.Verify(args.Get(0))
 	if err != nil {
 		log.Fatal(err)

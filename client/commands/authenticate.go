@@ -27,10 +27,7 @@ func authenticate(c *cli.Context) {
 		os.Exit(1)
 	}
 
-	authSDK, err := sdk.NewSDK(os.Getenv("CLAWIO_AUTH_ADDR"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	authSDK := sdk.New(os.Getenv("CLAWIO_AUTH_ADDR"), nil)
 	token, err := authSDK.Authenticate(args.Get(0), args.Get(1))
 	if err != nil {
 		log.Fatal(err)
