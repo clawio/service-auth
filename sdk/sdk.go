@@ -1,19 +1,19 @@
 package sdk
 
 import (
-	"net/url"
+	"net/http"
 )
 
 // SDK provides a set of methods to interact with an authn server.
 type SDK struct {
-	authServerURL *url.URL
+	BaseURL    string
+	HTTPClient *http.Client
 }
 
-// NewSDK returns a new SDK.
-func NewSDK(serverAddr string) (*SDK, error) {
-	u, err := url.Parse(serverAddr)
-	if err != nil {
-		return nil, err
+// New returns a new SDK. If a nil httpClient is provided, http.DefaultClient will be used.
+func New(baseURL string, httpClient *http.Client) *SDK {
+	if httpClient == nil {
+		httpClient = http.DefaultClient
 	}
-	return &SDK{u}, nil
+	return &SDK{baseURL, httpClient}
 }
