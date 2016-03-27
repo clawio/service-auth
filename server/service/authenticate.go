@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/NYTimes/gizmo/server"
@@ -35,20 +34,28 @@ func (s *Service) Authenticate(ctx context.Context, r *spec.AuthNRequest) (*spec
 
 // AuthenticateJSON handles the JSON call and forwards the request to Authenticate.
 // It delegates the logic to Authenticate.
-func (s *Service) AuthenticateJSON(r *http.Request) (int, interface{}, error) {
+func (s *Service) AuthenticateFunc(w http.ResponseWriter, r *http.Request) {
 	if r.Body == nil {
-		return http.StatusInternalServerError, nil, errors.New("body cannot be nil")
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 	authNRequest := &spec.AuthNRequest{}
 	if err := json.NewDecoder(r.Body).Decode(authNRequest); err != nil {
-		return http.StatusBadRequest, nil, codes.NewAPIErr(codes.BadInputData)
+		w.WriteHeader(http.StatusBadRequest)
+		apiErr := codes.NewAPIErr(codes.BadInputData)
+		json.NewEncoder(w).Encode(apiErr)
+		return
 	}
 	res, err := s.Authenticate(
 		context.Background(),
 		authNRequest,
 	)
 	if err != nil {
-		return http.StatusBadRequest, nil, err
+		w.WriteHeader(http.StatusBadRequest)
+		apiErr := codes.NewAPIErr(codes.BadInputData)
+		json.NewEncoder(w).Encode(apiErr)
+		return
 	}
-	return http.StatusOK, res, nil
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }

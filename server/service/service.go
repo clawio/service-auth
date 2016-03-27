@@ -5,11 +5,9 @@ import (
 	"net/http"
 
 	"github.com/NYTimes/gizmo/config"
-	"github.com/NYTimes/gizmo/server"
-	"github.com/Sirupsen/logrus"
-	"github.com/clawio/codes"
 	"github.com/clawio/service-auth/server/tokenstore"
 	"github.com/clawio/service-auth/server/userstore"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type (
@@ -69,41 +67,19 @@ func (s *Service) Middleware(h http.Handler) http.Handler {
 	return h
 }
 
-// JSONMiddleware provides a JSONEndpoint hook wrapped around all requests.
-// In this implementation, we're using it to provide application logging and to check errors
-// and provide generic responses.
-func (s *Service) JSONMiddleware(j server.JSONEndpoint) server.JSONEndpoint {
-	return func(r *http.Request) (int, interface{}, error) {
-
-		status, res, err := j(r)
-		// Convert non apiErr to apiErr with code 500 and message "unexpected error"
-		if err != nil {
-			switch err.(type) {
-			case *codes.APIErr:
-				// we do nothing
-			default:
-				server.LogWithFields(r).WithFields(logrus.Fields{
-					"error": err,
-				}).Error("unexpected error serving request")
-				err = codes.NewAPIErr(codes.Internal)
-			}
-		}
-
-		server.LogWithFields(r).Info("request served")
-		return status, res, err
-	}
-
-}
-
-// JSONEndpoints is a listing of all endpoints available in the Service.
-func (s *Service) JSONEndpoints() map[string]map[string]server.JSONEndpoint {
-	return map[string]map[string]server.JSONEndpoint{
-		"/authenticate": map[string]server.JSONEndpoint{
-			"POST": s.AuthenticateJSON,
+// Endpoints is a listing of all endpoints available in the MixedService.
+func (s *Service) Endpoints() map[string]map[string]http.HandlerFunc {
+	return map[string]map[string]http.HandlerFunc{
+		"/metrics": map[string]http.HandlerFunc{
+			"GET": func(w http.ResponseWriter, r *http.Request) {
+				prometheus.Handler().ServeHTTP(w, r)
+			},
 		},
-		"/verify/{token}": map[string]server.JSONEndpoint{
-			"GET": s.VerifyJSON,
+		"/authenticate": map[string]http.HandlerFunc{
+			"POST": prometheus.InstrumentHandlerFunc("/authenticate", s.AuthenticateFunc),
+		},
+		"/verify/{token}": map[string]http.HandlerFunc{
+			"GET": prometheus.InstrumentHandlerFunc("/verify", s.VerifyFunc),
 		},
 	}
-
 }

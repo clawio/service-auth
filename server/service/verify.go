@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/NYTimes/gizmo/server"
@@ -27,7 +28,7 @@ func (s *Service) Verify(ctx context.Context, r *spec.VerifyRequest) (*spec.Veri
 }
 
 // VerifyJSON handles the JSON call and forwards the request to Authenticate.
-func (s *Service) VerifyJSON(r *http.Request) (int, interface{}, error) {
+func (s *Service) VerifyFunc(w http.ResponseWriter, r *http.Request) {
 	res, err := s.Verify(
 		context.Background(),
 		&spec.VerifyRequest{
@@ -35,7 +36,11 @@ func (s *Service) VerifyJSON(r *http.Request) (int, interface{}, error) {
 		},
 	)
 	if err != nil {
-		return http.StatusBadRequest, nil, err
+		w.WriteHeader(http.StatusBadRequest)
+		apiErr := codes.NewAPIErr(codes.BadInputData)
+		json.NewEncoder(w).Encode(apiErr)
+		return
 	}
-	return http.StatusOK, res, nil
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
 }

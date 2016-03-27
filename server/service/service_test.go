@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/NYTimes/gizmo/config"
@@ -73,4 +75,12 @@ func (suite *TestSuite) TestNewInvalidUserStore() {
 
 func (suite *TestSuite) TestPrefix() {
 	require.Equal(suite.T(), suite.Service.Prefix(), "/clawio/auth/v1", "prefix must be equal")
+}
+
+func (suite *TestSuite) TestMetrics() {
+	r, err := http.NewRequest("GET", "/clawio/auth/v1/metrics", nil)
+	require.Nil(suite.T(), err)
+	w := httptest.NewRecorder()
+	suite.Server.ServeHTTP(w, r)
+	require.Equal(suite.T(), w.Code, 200)
 }
