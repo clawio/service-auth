@@ -10,9 +10,8 @@ import (
 )
 
 var AuthenticateCommand = cli.Command{
-	Name:      "authenticate",
-	Usage:     "Authenticates a user with username/password against a ClawIO Service Auth",
-	UsageText: "authenticate john johnpasswd",
+	Name:  "authenticate",
+	Usage: "Authenticates a user with username/password against a ClawIO Service Auth",
 	Description: `
 This command authenticates a user with a username and password.
 			`,

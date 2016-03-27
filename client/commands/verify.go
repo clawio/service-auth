@@ -11,9 +11,8 @@ import (
 )
 
 var VerifyCommand = cli.Command{
-	Name:      "verify",
-	Usage:     "Verifies an authentication token",
-	UsageText: "verify <token>",
+	Name:  "verify",
+	Usage: "Verifies an authentication token",
 	Description: `
 This command verifies an uuthentication token.
 `,
