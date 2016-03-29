@@ -30,7 +30,7 @@ func (suite *TestSuite) TestAuthenticateJSON() {
 	authNRes := &spec.AuthNResponse{}
 	err = json.NewDecoder(w.Body).Decode(authNRes)
 	require.Nil(suite.T(), err)
-	require.Equal(suite.T(), authNRes.Token, "testtoken")
+	require.Equal(suite.T(), "testtoken", authNRes.Token)
 }
 
 func (suite *TestSuite) TestAuthenticateJSONNilBody() {
@@ -38,7 +38,7 @@ func (suite *TestSuite) TestAuthenticateJSONNilBody() {
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
-	require.Equal(suite.T(), w.Code, 500)
+	require.Equal(suite.T(), 500, w.Code)
 }
 
 func (suite *TestSuite) TestAuthenticateJSONInvalidJSON() {
@@ -47,7 +47,7 @@ func (suite *TestSuite) TestAuthenticateJSONInvalidJSON() {
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
-	require.Equal(suite.T(), w.Code, 400)
+	require.Equal(suite.T(), 400, w.Code)
 }
 
 func (suite *TestSuite) TestAuthenticateJSONUserNotFound() {
@@ -57,7 +57,7 @@ func (suite *TestSuite) TestAuthenticateJSONUserNotFound() {
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
-	require.Equal(suite.T(), w.Code, 400)
+	require.Equal(suite.T(), 400, w.Code)
 }
 
 func (suite *TestSuite) TestAuthenticateJSONTokenCreationError() {
@@ -73,7 +73,7 @@ func (suite *TestSuite) TestAuthenticateJSONTokenCreationError() {
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
-	require.Equal(suite.T(), w.Code, 400)
+	require.Equal(suite.T(), 400, w.Code)
 	suite.MockUserStore.AssertExpectations(suite.T())
 	suite.MockTokenStore.AssertExpectations(suite.T())
 }

@@ -22,13 +22,13 @@ func (suite *TestSuite) TestVerifyJSON() {
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
-	require.Equal(suite.T(), w.Code, 200)
+	require.Equal(suite.T(), 200, w.Code)
 	suite.MockUserStore.AssertExpectations(suite.T())
 	suite.MockTokenStore.AssertExpectations(suite.T())
 	verifyRes := &spec.VerifyResponse{}
 	err = json.NewDecoder(w.Body).Decode(verifyRes)
 	require.Nil(suite.T(), err)
-	require.Equal(suite.T(), verifyRes.Identity.Username, testIdentity.Username)
+	require.Equal(suite.T(), testIdentity.Username, verifyRes.Identity.Username)
 }
 
 func (suite *TestSuite) TestVerifyJSONInvalidToken() {
@@ -38,7 +38,7 @@ func (suite *TestSuite) TestVerifyJSONInvalidToken() {
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
-	require.Equal(suite.T(), w.Code, 400)
+	require.Equal(suite.T(), 400, w.Code)
 	suite.MockUserStore.AssertExpectations(suite.T())
 	suite.MockTokenStore.AssertExpectations(suite.T())
 }

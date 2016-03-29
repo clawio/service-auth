@@ -82,5 +82,5 @@ func (suite *TestSuite) TestMetrics() {
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
-	require.Equal(suite.T(), w.Code, 200)
+	require.Equal(suite.T(), 200, w.Code)
 }
