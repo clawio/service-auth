@@ -18,7 +18,7 @@ func (suite *TestSuite) TestVerifyJSON() {
 		DisplayName: "Test",
 	}
 	suite.MockTokenStore.On("Verify", testToken).Once().Return(testIdentity, nil)
-	r, err := http.NewRequest("GET", "/clawio/auth/v1/verify/"+testToken, nil)
+	r, err := http.NewRequest("GET", verifyURL+testToken, nil)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
@@ -32,9 +32,9 @@ func (suite *TestSuite) TestVerifyJSON() {
 }
 
 func (suite *TestSuite) TestVerifyJSONInvalidToken() {
-	testToken := "faketoken"
+	testToken := "testtoken"
 	suite.MockTokenStore.On("Verify", testToken).Once().Return(&spec.Identity{}, errors.New("test error"))
-	r, err := http.NewRequest("GET", "/clawio/auth/v1/verify/"+testToken, nil)
+	r, err := http.NewRequest("GET", verifyURL+testToken, nil)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)

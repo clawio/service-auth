@@ -57,7 +57,7 @@ func New(cfg *Config) (*Service, error) {
 // Prefix returns the string prefix used for all endpoints within
 // this service.
 func (s *Service) Prefix() string {
-	return "/clawio/auth/v1"
+	return "/clawio/v1/auth"
 }
 
 // Middleware provides an http.Handler hook wrapped around all requests.

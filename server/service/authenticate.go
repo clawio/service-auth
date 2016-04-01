@@ -19,14 +19,14 @@ func (s *Service) Authenticate(ctx context.Context, r *spec.AuthNRequest) (*spec
 		server.Log.WithFields(logrus.Fields{
 			"error": err,
 		}).Error("error finding user")
-		return res, codes.NewAPIErr(codes.BadAuthenticationData)
+		return res, codes.NewErr(codes.BadAuthenticationData, "user not found")
 	}
 	token, err := s.TokenStore.Create(identity)
 	if err != nil {
 		server.Log.WithFields(logrus.Fields{
 			"error": err,
 		}).Error("error creating authn token")
-		return res, codes.NewAPIErr(codes.BadAuthenticationData)
+		return res, codes.NewErr(codes.BadAuthenticationData, "cannot create token")
 	}
 	res.Token = token
 	return res, err
@@ -41,9 +41,9 @@ func (s *Service) AuthenticateFunc(w http.ResponseWriter, r *http.Request) {
 	}
 	authNRequest := &spec.AuthNRequest{}
 	if err := json.NewDecoder(r.Body).Decode(authNRequest); err != nil {
+		e := codes.NewErr(codes.BadInputData, "")
 		w.WriteHeader(http.StatusBadRequest)
-		apiErr := codes.NewAPIErr(codes.BadInputData)
-		json.NewEncoder(w).Encode(apiErr)
+		json.NewEncoder(w).Encode(e)
 		return
 	}
 	res, err := s.Authenticate(
@@ -52,8 +52,7 @@ func (s *Service) AuthenticateFunc(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		apiErr := codes.NewAPIErr(codes.BadInputData)
-		json.NewEncoder(w).Encode(apiErr)
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

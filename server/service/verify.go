@@ -20,8 +20,8 @@ func (s *Service) Verify(ctx context.Context, r *spec.VerifyRequest) (*spec.Veri
 	if err != nil {
 		server.Log.WithFields(logrus.Fields{
 			"error": err,
-		})
-		return res, codes.NewAPIErr(codes.InvalidToken)
+		}).Warn("invalid token")
+		return res, codes.NewErr(codes.InvalidToken, "")
 	}
 	res.Identity = identity
 	return res, nil
@@ -37,8 +37,7 @@ func (s *Service) VerifyFunc(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		apiErr := codes.NewAPIErr(codes.BadInputData)
-		json.NewEncoder(w).Encode(apiErr)
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

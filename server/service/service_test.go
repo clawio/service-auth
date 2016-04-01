@@ -7,10 +7,16 @@ import (
 
 	"github.com/NYTimes/gizmo/config"
 	"github.com/NYTimes/gizmo/server"
-	"github.com/clawio/service-auth/server/service/mock_tokenstore"
-	"github.com/clawio/service-auth/server/service/mock_userstore"
+	mock_tokenstore "github.com/clawio/service-auth/server/tokenstore/mock"
+	mock_userstore "github.com/clawio/service-auth/server/userstore/mock"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+)
+
+const (
+	baseURL         = "/clawio/v1/auth/"
+	authenticateURL = baseURL + "authenticate"
+	verifyURL       = baseURL + "verify/"
 )
 
 type TestSuite struct {
@@ -74,11 +80,11 @@ func (suite *TestSuite) TestNewInvalidUserStore() {
 }
 
 func (suite *TestSuite) TestPrefix() {
-	require.Equal(suite.T(), suite.Service.Prefix(), "/clawio/auth/v1", "prefix must be equal")
+	require.Equal(suite.T(), suite.Service.Prefix(), "/clawio/v1/auth", "prefix must be equal")
 }
 
 func (suite *TestSuite) TestMetrics() {
-	r, err := http.NewRequest("GET", "/clawio/auth/v1/metrics", nil)
+	r, err := http.NewRequest("GET", "/clawio/v1/auth/metrics", nil)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)

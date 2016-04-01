@@ -1,4 +1,4 @@
-package mock_tokenstore
+package mock
 
 import (
 	"github.com/clawio/service-auth/server/spec"

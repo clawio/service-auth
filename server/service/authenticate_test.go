@@ -20,7 +20,7 @@ func (suite *TestSuite) TestAuthenticateJSON() {
 	suite.MockUserStore.On("FindByCredentials", "test", "test").Once().Return(testIdentity, nil)
 	suite.MockTokenStore.On("Create", testIdentity).Once().Return("testtoken", nil)
 	body := strings.NewReader(`{"username":"test", "password":"test"}`)
-	r, err := http.NewRequest("POST", "/clawio/auth/v1/authenticate", body)
+	r, err := http.NewRequest("POST", authenticateURL, body)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
@@ -34,7 +34,7 @@ func (suite *TestSuite) TestAuthenticateJSON() {
 }
 
 func (suite *TestSuite) TestAuthenticateJSONNilBody() {
-	r, err := http.NewRequest("POST", "/clawio/auth/v1/authenticate", nil)
+	r, err := http.NewRequest("POST", authenticateURL, nil)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
@@ -43,7 +43,7 @@ func (suite *TestSuite) TestAuthenticateJSONNilBody() {
 
 func (suite *TestSuite) TestAuthenticateJSONInvalidJSON() {
 	body := strings.NewReader("")
-	r, err := http.NewRequest("POST", "/clawio/auth/v1/authenticate", body)
+	r, err := http.NewRequest("POST", authenticateURL, body)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
@@ -53,7 +53,7 @@ func (suite *TestSuite) TestAuthenticateJSONInvalidJSON() {
 func (suite *TestSuite) TestAuthenticateJSONUserNotFound() {
 	suite.MockUserStore.On("FindByCredentials", "unexistent", "unexistent").Return(&spec.Identity{}, errors.New("test error"))
 	body := strings.NewReader(`{"username":"unexistent", "password":"unexistent"}`)
-	r, err := http.NewRequest("POST", "/clawio/auth/v1/authenticate", body)
+	r, err := http.NewRequest("POST", authenticateURL, body)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)
@@ -69,7 +69,7 @@ func (suite *TestSuite) TestAuthenticateJSONTokenCreationError() {
 	suite.MockUserStore.On("FindByCredentials", "test", "test").Once().Return(testIdentity, nil)
 	suite.MockTokenStore.On("Create", testIdentity).Once().Return("", errors.New("test error"))
 	body := strings.NewReader(`{"username":"test", "password":"test"}`)
-	r, err := http.NewRequest("POST", "/clawio/auth/v1/authenticate", body)
+	r, err := http.NewRequest("POST", authenticateURL, body)
 	require.Nil(suite.T(), err)
 	w := httptest.NewRecorder()
 	suite.Server.ServeHTTP(w, r)

@@ -1,4 +1,4 @@
-package mock_userstore
+package mock
 
 import (
 	"github.com/clawio/service-auth/server/spec"
